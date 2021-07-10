@@ -1,4 +1,4 @@
-# genshin_calendar
+# bh3_calendar
 
 ~~公主连结~~崩3图形化活动日历插件，Fork的公主连接版本，适用于 `HoshinoBot v2`.
 
