@@ -8,14 +8,14 @@ import re
 import traceback
 
 HELP_STR = '''
-原神活动日历
-原神日历 : 查看本群订阅服务器日历
-原神日历 on/off : 订阅/取消订阅指定服务器的日历推送
-原神日历 time 时:分 : 设置日历推送时间
-原神日历 status : 查看本群日历推送设置
+崩3活动日历
+崩3日历 : 查看本群订阅服务器日历
+崩3日历 on/off : 订阅/取消订阅指定服务器的日历推送
+崩3日历 time 时:分 : 设置日历推送时间
+崩3日历 status : 查看本群日历推送设置
 '''.strip()
 
-sv = hoshino.Service('原神日历', help_=HELP_STR, bundle='原神日历')
+sv = hoshino.Service('崩3日历', help_=HELP_STR, bundle='崩3日历')
 
 group_data = {}
 
@@ -79,7 +79,7 @@ def update_group_schedule(group_id):
     )
 
 
-@sv.on_rex(r'^原神日[历程](.*)')
+@sv.on_rex(r'^崩坏?[3三]日[历程](.*)')
 async def start_scheduled(bot, ev):
     group_id = str(ev['group_id'])
     server = 'cn'
@@ -106,12 +106,12 @@ async def start_scheduled(bot, ev):
             if server not in group_data[group_id]['server_list']:
                 group_data[group_id]['server_list'].append(server)
             save_data()
-            msg = f'原神日程推送已开启'
+            msg = f'崩3日程推送已开启'
         elif 'off' in cmd:
             if server in group_data[group_id]['server_list']:
                 group_data[group_id]['server_list'].remove(server)
             save_data()
-            msg = f'原神日程推送已关闭'
+            msg = f'崩3日程推送已关闭'
         elif 'time' in cmd:
             match = re.search(r'(\d*):(\d*)', cmd)
             if not match or len(match.groups()) < 2:
@@ -132,6 +132,7 @@ async def start_scheduled(bot, ev):
                 msg = f'已切换为标准image模式'
             save_data()
         else:
+            return
             msg = '指令错误'
         update_group_schedule(group_id)
         save_data()

@@ -29,10 +29,10 @@ ignored_key_words = [
 
 ignored_ann_ids = [
     495,  # 有奖问卷调查开启！
-    1263,  # 米游社《原神》专属工具一览
-    423,  # 《原神》玩家社区一览
-    422,  # 《原神》防沉迷系统说明
-    762,  # 《原神》公平运营声明
+    1263,  # 米游社《崩3》专属工具一览
+    423,  # 《崩3》玩家社区一览
+    422,  # 《崩3》防沉迷系统说明
+    762,  # 《崩3》公平运营声明
 ]
 
 
@@ -47,28 +47,15 @@ async def query_data(url):
 
 
 async def load_event_cn():
-    result = await query_data('https://hk4e-api-static.mihoyo.com/common/hk4e_cn/announcement/api/getAnnList?game=hk4e&game_biz=hk4e_cn&lang=zh-cn&bundle_id=hk4e_cn&platform=pc&region=cn_gf01&level=55&uid=100000000')
+    result = await query_data('https://api-takumi.mihoyo.com/common/bh3_cn/announcement/api/getAnnList?game=bh3&game_biz=bh3_cn&lang=zh-cn&bundle_id=bh3_cn&platform=pc&region=ios01&level=1&channel_id=1&uid=51000000')
     if result and 'retcode' in result and result['retcode'] == 0:
         event_data['cn'] = []
         datalist = result['data']['list']
         for data in datalist:
             for item in data['list']:
                 # 1 活动公告 2 游戏公告
-                if item['type'] == 2:
-                    ignore = False
-                    for ann_id in ignored_ann_ids:
-                        if ann_id == item["ann_id"]:
-                            ignore = True
-                            break
-                    if ignore:
-                        continue
-
-                    for keyword in ignored_key_words:
-                        if keyword in item['title']:
-                            ignore = True
-                            break
-                    if ignore:
-                        continue
+                if item['type'] != 20:
+                    continue
 
                 start_time = datetime.strptime(
                     item['start_time'], r"%Y-%m-%d %H:%M:%S")
@@ -78,41 +65,10 @@ async def load_event_cn():
                          'start': start_time,
                          'end': end_time,
                          'forever': False,
-                         'type': 0}
-                if '任务' in item['title']:
-                    event['forever'] = True
-                if item['type'] == 1:
-                    event['type'] = 1
-                if '扭蛋' in item['tag_label']:
+                         'type': 1}
+                if '补给' in item['title']:
                     event['type'] = 2
-                if '倍' in item['title']:
-                    event['type'] = 3
                 event_data['cn'].append(event)
-        # 深渊提醒
-        i = 0
-        while i < 2:
-            curmon = datetime.today() + relativedelta(months=i)
-            nextmon = curmon + relativedelta(months=1)
-            event_data['cn'].append({
-                'title': '「深镜螺旋」',
-                'start': datetime.strptime(
-                    curmon.strftime("%Y/%m/01 04:00"), r"%Y/%m/%d %H:%M"),
-                'end': datetime.strptime(
-                    curmon.strftime("%Y/%m/16 03:59"), r"%Y/%m/%d %H:%M"),
-                'forever': False,
-                'type': 3
-            })
-            event_data['cn'].append({
-                'title': '「深镜螺旋」',
-                'start': datetime.strptime(
-                    curmon.strftime("%Y/%m/16 04:00"), r"%Y/%m/%d %H:%M"),
-                'end': datetime.strptime(
-                    nextmon.strftime("%Y/%m/01 03:59"), r"%Y/%m/%d %H:%M"),
-                'forever': False,
-                'type': 3
-            })
-            i = i+1
-
         return 0
     return 1
 
