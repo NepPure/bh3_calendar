@@ -21,18 +21,20 @@ lock = {
 }
 
 ignored_key_words = [
-    "游戏更新修复与优化说明",
-    "版本内容专题页",
-    "版本更新说明",
-    "米游社"
+    "封号",
+    "修复",
+    "爱酱&帮助",
+    "公平运营",
+    "防沉迷",
+    "客服",
+    "隐私",
+    "米游社",
+    "攻略",
+    "社区"
 ]
 
 ignored_ann_ids = [
-    495,  # 有奖问卷调查开启！
-    1263,  # 米游社《崩3》专属工具一览
-    423,  # 《崩3》玩家社区一览
-    422,  # 《崩3》防沉迷系统说明
-    762,  # 《崩3》公平运营声明
+
 ]
 
 
@@ -53,9 +55,22 @@ async def load_event_cn():
         datalist = result['data']['list']
         for data in datalist:
             for item in data['list']:
-                # 1 活动公告 2 游戏公告
+                # 20 活动公告 21 游戏公告
                 if item['type'] != 20:
-                    continue
+                    ignore = False
+                    for ann_id in ignored_ann_ids:
+                        if ann_id == item["ann_id"]:
+                            ignore = True
+                            break
+                    if ignore:
+                        continue
+
+                    for keyword in ignored_key_words:
+                        if keyword in item['title']:
+                            ignore = True
+                            break
+                    if ignore:
+                        continue
 
                 start_time = datetime.strptime(
                     item['start_time'], r"%Y-%m-%d %H:%M:%S")
@@ -65,9 +80,11 @@ async def load_event_cn():
                          'start': start_time,
                          'end': end_time,
                          'forever': False,
-                         'type': 1}
-                if '补给' in item['title']:
-                    event['type'] = 2
+                         'type': 0}
+                if item['type'] == 20:
+                    event['type'] = 1
+                    if '补给' in item['title']:
+                        event['type'] = 2
                 event_data['cn'].append(event)
         return 0
     return 1

@@ -2,7 +2,10 @@
 
 ~~公主连结~~崩3图形化活动日历插件，Fork的公主连接版本，适用于 `HoshinoBot v2`.
 
-项目地址 <https://github.com/NepPure/genshin_calendar>
+项目地址 <https://github.com/NepPure/bh3_calendar>
+
+原神的👇
+<https://github.com/NepPure/genshin_calendar>
 
 ![calendar](preview.gif)
 
@@ -12,8 +15,8 @@
 
 ## 安装方法
 
-1. 在HoshinoBot的插件目录modules下clone本项目 `git clone https://github.com/NepPure/genshin_calendar.git`
-1. 在 `config/__bot__.py`的模块列表里加入 `genshin_calendar`
+1. 在HoshinoBot的插件目录modules下clone本项目 `git clone https://github.com/NepPure/bh3_calendar.git`
+1. 在 `config/__bot__.py`的模块列表里加入 `bh3_calendar`
 1. 重启HoshinoBot
 
 ## 指令列表
