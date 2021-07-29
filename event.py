@@ -83,7 +83,7 @@ async def load_event_cn():
                          'type': 0}
                 if item['type'] == 20:
                     event['type'] = 1
-                    if '补给' in item['title']:
+                    if '补给' in item['title'] or '精准' in item['title']:
                         event['type'] = 2
                 event_data['cn'].append(event)
         return 0
